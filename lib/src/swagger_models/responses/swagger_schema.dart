@@ -18,7 +18,6 @@ class SwaggerSchema {
     this.oneOf = const [],
     this.anyOf = const [],
     this.allOf = const [],
-    this.required = const [],
     this.description = '',
     this.enumNames,
     this.isNullable = false,
@@ -57,8 +56,8 @@ class SwaggerSchema {
 
   bool get isListEnum => type == 'array' && items != null && items!.isEnum;
 
-  @JsonKey(name: 'required', defaultValue: [])
-  List<String> required;
+  // @JsonKey(name: 'required', defaultValue: [])
+  // List<String> required;
 
   @JsonKey(name: 'items')
   SwaggerSchema? items;

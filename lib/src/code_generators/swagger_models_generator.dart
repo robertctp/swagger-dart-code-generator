@@ -1196,7 +1196,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List<String> allEnumListNames,
   ) {
     final properties = getModelProperties(schema, schemas);
-    final requiredProperties = schema.required;
+    final requiredProperties = <String>[];
 
     final generatedConstructorProperties = generateConstructorPropertiesContent(
       className: className,
