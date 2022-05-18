@@ -40,83 +40,97 @@ abstract class PetServiceJson extends ChopperService {
 
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
-  Future<chopper.Response> petPost({required Pet? body}) {
+  Future<chopper.Response> petPost({required Pet? body, String? cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
-    return _petPost(body: body);
+    return _petPost(body: body, cacheControl: cacheControl);
   }
 
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
   @Post(path: '/pet')
-  Future<chopper.Response> _petPost({@Body() required Pet? body});
+  Future<chopper.Response> _petPost(
+      {@Body() required Pet? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
-  Future<chopper.Response> petPut({required Pet? body}) {
+  Future<chopper.Response> petPut({required Pet? body, String? cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
-    return _petPut(body: body);
+    return _petPut(body: body, cacheControl: cacheControl);
   }
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
   @Put(path: '/pet')
-  Future<chopper.Response> _petPut({@Body() required Pet? body});
+  Future<chopper.Response> _petPut(
+      {@Body() required Pet? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
   Future<chopper.Response<List<Pet>>> petFindByStatusGet(
-      {required enums.PetFindByStatusGetStatus? status}) {
+      {required enums.PetFindByStatusGetStatus? status, String? cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
     return _petFindByStatusGet(
-        status: enums.$PetFindByStatusGetStatusMap[status]);
+        status: enums.$PetFindByStatusGetStatusMap[status]?.toString(),
+        cacheControl: cacheControl);
   }
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
   @Get(path: '/pet/findByStatus')
   Future<chopper.Response<List<Pet>>> _petFindByStatusGet(
-      {@Query('status') required dynamic status});
+      {@Query('status') required String? status,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
   Future<chopper.Response<List<Pet>>> petFindByTagsGet(
-      {required List<String>? tags}) {
+      {required List<String>? tags, String? cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
-    return _petFindByTagsGet(tags: tags);
+    return _petFindByTagsGet(tags: tags, cacheControl: cacheControl);
   }
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
   @Get(path: '/pet/findByTags')
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet(
-      {@Query('tags') required List<String>? tags});
+      {@Query('tags') required List<String>? tags,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Find pet by ID
   ///@param petId ID of pet to return
   Future<chopper.Response<Pet>> petPetIdGet(
-      {required int? petId, String? apiKey}) {
+      {required int? petId, String? apiKey, String? cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
-    return _petPetIdGet(petId: petId, apiKey: apiKey);
+    return _petPetIdGet(
+        petId: petId, apiKey: apiKey, cacheControl: cacheControl);
   }
 
   ///Find pet by ID
   ///@param petId ID of pet to return
   @Get(path: '/pet/{petId}')
   Future<chopper.Response<Pet>> _petPetIdGet(
-      {@Path('petId') required int? petId, @Header('api_key') String? apiKey});
+      {@Path('petId') required int? petId,
+      @Header('api_key') String? apiKey,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Updates a pet in the store with form data
   ///@param petId ID of pet that needs to be updated
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
   Future<chopper.Response> petPetIdPost(
-      {required int? petId, String? name, String? status}) {
-    return _petPetIdPost(petId: petId, name: name, status: status);
+      {required int? petId,
+      String? name,
+      String? status,
+      String? cacheControl}) {
+    return _petPetIdPost(
+        petId: petId, name: name, status: status, cacheControl: cacheControl);
   }
 
   ///Updates a pet in the store with form data
@@ -127,14 +141,16 @@ abstract class PetServiceJson extends ChopperService {
   Future<chopper.Response> _petPetIdPost(
       {@Path('petId') required int? petId,
       @Field('name') String? name,
-      @Field('status') String? status});
+      @Field('status') String? status,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Deletes a pet
   ///@param api_key
   ///@param petId Pet id to delete
   Future<chopper.Response> petPetIdDelete(
-      {String? apiKey, required int? petId}) {
-    return _petPetIdDelete(apiKey: apiKey, petId: petId);
+      {String? apiKey, required int? petId, String? cacheControl}) {
+    return _petPetIdDelete(
+        apiKey: apiKey, petId: petId, cacheControl: cacheControl);
   }
 
   ///Deletes a pet
@@ -142,19 +158,27 @@ abstract class PetServiceJson extends ChopperService {
   ///@param petId Pet id to delete
   @Delete(path: '/pet/{petId}')
   Future<chopper.Response> _petPetIdDelete(
-      {@Header('api_key') String? apiKey, @Path('petId') required int? petId});
+      {@Header('api_key') String? apiKey,
+      @Path('petId') required int? petId,
+      @Header('Cache-Control') String? cacheControl});
 
   ///uploads an image
   ///@param petId ID of pet to update
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
   Future<chopper.Response<ApiResponse>> petPetIdUploadImagePost(
-      {required int? petId, String? additionalMetadata, List<String>? file}) {
+      {required int? petId,
+      String? additionalMetadata,
+      List<String>? file,
+      String? cacheControl}) {
     generatedMapping.putIfAbsent(
         ApiResponse, () => ApiResponse.fromJsonFactory);
 
     return _petPetIdUploadImagePost(
-        petId: petId, additionalMetadata: additionalMetadata, file: file);
+        petId: petId,
+        additionalMetadata: additionalMetadata,
+        file: file,
+        cacheControl: cacheControl);
   }
 
   ///uploads an image
@@ -165,103 +189,121 @@ abstract class PetServiceJson extends ChopperService {
   Future<chopper.Response<ApiResponse>> _petPetIdUploadImagePost(
       {@Path('petId') required int? petId,
       @Field('additionalMetadata') String? additionalMetadata,
-      @Field('file') List<String>? file});
+      @Field('file') List<String>? file,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Returns pet inventories by status
-  Future<chopper.Response<Object>> storeInventoryGet({String? apiKey}) {
-    return _storeInventoryGet(apiKey: apiKey);
+  Future<chopper.Response<Object>> storeInventoryGet(
+      {String? apiKey, String? cacheControl}) {
+    return _storeInventoryGet(apiKey: apiKey, cacheControl: cacheControl);
   }
 
   ///Returns pet inventories by status
   @Get(path: '/store/inventory')
   Future<chopper.Response<Object>> _storeInventoryGet(
-      {@Header('api_key') String? apiKey});
+      {@Header('api_key') String? apiKey,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
-  Future<chopper.Response<Order>> storeOrderPost({required Order? body}) {
+  Future<chopper.Response<Order>> storeOrderPost(
+      {required Order? body, String? cacheControl}) {
     generatedMapping.putIfAbsent(Order, () => Order.fromJsonFactory);
 
-    return _storeOrderPost(body: body);
+    return _storeOrderPost(body: body, cacheControl: cacheControl);
   }
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
   @Post(path: '/store/order')
   Future<chopper.Response<Order>> _storeOrderPost(
-      {@Body() required Order? body});
+      {@Body() required Order? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
   Future<chopper.Response<Order>> storeOrderOrderIdGet(
-      {required int? orderId}) {
+      {required int? orderId, String? cacheControl}) {
     generatedMapping.putIfAbsent(Order, () => Order.fromJsonFactory);
 
-    return _storeOrderOrderIdGet(orderId: orderId);
+    return _storeOrderOrderIdGet(orderId: orderId, cacheControl: cacheControl);
   }
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
   @Get(path: '/store/order/{orderId}')
   Future<chopper.Response<Order>> _storeOrderOrderIdGet(
-      {@Path('orderId') required int? orderId});
+      {@Path('orderId') required int? orderId,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
-  Future<chopper.Response> storeOrderOrderIdDelete({required int? orderId}) {
-    return _storeOrderOrderIdDelete(orderId: orderId);
+  Future<chopper.Response> storeOrderOrderIdDelete(
+      {required int? orderId, String? cacheControl}) {
+    return _storeOrderOrderIdDelete(
+        orderId: orderId, cacheControl: cacheControl);
   }
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
   @Delete(path: '/store/order/{orderId}')
   Future<chopper.Response> _storeOrderOrderIdDelete(
-      {@Path('orderId') required int? orderId});
+      {@Path('orderId') required int? orderId,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Create user
   ///@param body Created user object
-  Future<chopper.Response> userPost({required User? body}) {
+  Future<chopper.Response> userPost(
+      {required User? body, String? cacheControl}) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
 
-    return _userPost(body: body);
+    return _userPost(body: body, cacheControl: cacheControl);
   }
 
   ///Create user
   ///@param body Created user object
   @Post(path: '/user')
-  Future<chopper.Response> _userPost({@Body() required User? body});
+  Future<chopper.Response> _userPost(
+      {@Body() required User? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Creates list of users with given input array
   ///@param body List of user object
   Future<chopper.Response> userCreateWithArrayPost(
-      {required List<User>? body}) {
-    return _userCreateWithArrayPost(body: body);
+      {required List<User>? body, String? cacheControl}) {
+    return _userCreateWithArrayPost(body: body, cacheControl: cacheControl);
   }
 
   ///Creates list of users with given input array
   ///@param body List of user object
   @Post(path: '/user/createWithArray')
   Future<chopper.Response> _userCreateWithArrayPost(
-      {@Body() required List<User>? body});
+      {@Body() required List<User>? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Creates list of users with given input array
   ///@param body List of user object
-  Future<chopper.Response> userCreateWithListPost({required List<User>? body}) {
-    return _userCreateWithListPost(body: body);
+  Future<chopper.Response> userCreateWithListPost(
+      {required List<User>? body, String? cacheControl}) {
+    return _userCreateWithListPost(body: body, cacheControl: cacheControl);
   }
 
   ///Creates list of users with given input array
   ///@param body List of user object
   @Post(path: '/user/createWithList')
   Future<chopper.Response> _userCreateWithListPost(
-      {@Body() required List<User>? body});
+      {@Body() required List<User>? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Logs user into the system
   ///@param username The user name for login
   ///@param password The password for login in clear text
   Future<chopper.Response<String>> userLoginGet(
-      {required String? username, required String? password}) {
-    return _userLoginGet(username: username, password: password);
+      {required String? username,
+      required String? password,
+      String? cacheControl}) {
+    return _userLoginGet(
+        username: username, password: password, cacheControl: cacheControl);
   }
 
   ///Logs user into the system
@@ -270,39 +312,44 @@ abstract class PetServiceJson extends ChopperService {
   @Get(path: '/user/login')
   Future<chopper.Response<String>> _userLoginGet(
       {@Query('username') required String? username,
-      @Query('password') required String? password});
+      @Query('password') required String? password,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Logs out current logged in user session
-  Future<chopper.Response> userLogoutGet() {
-    return _userLogoutGet();
+  Future<chopper.Response> userLogoutGet({String? cacheControl}) {
+    return _userLogoutGet(cacheControl: cacheControl);
   }
 
   ///Logs out current logged in user session
   @Get(path: '/user/logout')
-  Future<chopper.Response> _userLogoutGet();
+  Future<chopper.Response> _userLogoutGet(
+      {@Header('Cache-Control') String? cacheControl});
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
-  Future<chopper.Response<User>> userUsernameGet({required String? username}) {
+  Future<chopper.Response<User>> userUsernameGet(
+      {required String? username, String? cacheControl}) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
 
-    return _userUsernameGet(username: username);
+    return _userUsernameGet(username: username, cacheControl: cacheControl);
   }
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
   @Get(path: '/user/{username}')
   Future<chopper.Response<User>> _userUsernameGet(
-      {@Path('username') required String? username});
+      {@Path('username') required String? username,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Updated user
   ///@param username name that need to be updated
   ///@param body Updated user object
   Future<chopper.Response> userUsernamePut(
-      {required String? username, required User? body}) {
+      {required String? username, required User? body, String? cacheControl}) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
 
-    return _userUsernamePut(username: username, body: body);
+    return _userUsernamePut(
+        username: username, body: body, cacheControl: cacheControl);
   }
 
   ///Updated user
@@ -311,19 +358,22 @@ abstract class PetServiceJson extends ChopperService {
   @Put(path: '/user/{username}')
   Future<chopper.Response> _userUsernamePut(
       {@Path('username') required String? username,
-      @Body() required User? body});
+      @Body() required User? body,
+      @Header('Cache-Control') String? cacheControl});
 
   ///Delete user
   ///@param username The name that needs to be deleted
-  Future<chopper.Response> userUsernameDelete({required String? username}) {
-    return _userUsernameDelete(username: username);
+  Future<chopper.Response> userUsernameDelete(
+      {required String? username, String? cacheControl}) {
+    return _userUsernameDelete(username: username, cacheControl: cacheControl);
   }
 
   ///Delete user
   ///@param username The name that needs to be deleted
   @Delete(path: '/user/{username}')
   Future<chopper.Response> _userUsernameDelete(
-      {@Path('username') required String? username});
+      {@Path('username') required String? username,
+      @Header('Cache-Control') String? cacheControl});
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -339,18 +389,21 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'id', includeIfNull: false)
   final num? id;
-  @JsonKey(name: 'petId')
+  @JsonKey(name: 'petId', includeIfNull: false)
   final num? petId;
-  @JsonKey(name: 'quantity')
+  @JsonKey(name: 'quantity', includeIfNull: false)
   final int? quantity;
-  @JsonKey(name: 'shipDate')
+  @JsonKey(name: 'shipDate', includeIfNull: false)
   final DateTime? shipDate;
   @JsonKey(
-      name: 'status', toJson: orderStatusToJson, fromJson: orderStatusFromJson)
+      name: 'status',
+      includeIfNull: false,
+      toJson: orderStatusToJson,
+      fromJson: orderStatusFromJson)
   final enums.OrderStatus? status;
-  @JsonKey(name: 'complete', defaultValue: false)
+  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
   final bool? complete;
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
@@ -419,9 +472,9 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'id', includeIfNull: false)
   final num? id;
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
   final String? name;
   static const fromJsonFactory = _$CategoryFromJson;
   static const toJsonFactory = _$CategoryToJson;
@@ -468,21 +521,21 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'id', includeIfNull: false)
   final num? id;
-  @JsonKey(name: 'username')
+  @JsonKey(name: 'username', includeIfNull: false, defaultValue: '')
   final String? username;
-  @JsonKey(name: 'firstName')
+  @JsonKey(name: 'firstName', includeIfNull: false, defaultValue: '')
   final String? firstName;
-  @JsonKey(name: 'lastName')
+  @JsonKey(name: 'lastName', includeIfNull: false, defaultValue: '')
   final String? lastName;
-  @JsonKey(name: 'email')
+  @JsonKey(name: 'email', includeIfNull: false, defaultValue: '')
   final String? email;
-  @JsonKey(name: 'password')
+  @JsonKey(name: 'password', includeIfNull: false, defaultValue: '')
   final String? password;
-  @JsonKey(name: 'phone')
+  @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
   final String? phone;
-  @JsonKey(name: 'userStatus')
+  @JsonKey(name: 'userStatus', includeIfNull: false)
   final int? userStatus;
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
@@ -562,9 +615,9 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'id', includeIfNull: false)
   final num? id;
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
   final String? name;
   static const fromJsonFactory = _$TagFromJson;
   static const toJsonFactory = _$TagToJson;
@@ -601,25 +654,29 @@ class Pet {
   Pet({
     this.id,
     this.category,
-    required this.name,
-    required this.photoUrls,
+    this.name,
+    this.photoUrls,
     this.tags,
     this.status,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  @JsonKey(name: 'id')
+  @JsonKey(name: 'id', includeIfNull: false)
   final num? id;
-  @JsonKey(name: 'category')
+  @JsonKey(name: 'category', includeIfNull: false)
   final Category? category;
-  @JsonKey(name: 'name')
-  final String name;
-  @JsonKey(name: 'photoUrls', defaultValue: <String>[])
-  final List<String> photoUrls;
-  @JsonKey(name: 'tags', defaultValue: <Tag>[])
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  final String? name;
+  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
+  final List<String>? photoUrls;
+  @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
   final List<Tag>? tags;
-  @JsonKey(name: 'status', toJson: petStatusToJson, fromJson: petStatusFromJson)
+  @JsonKey(
+      name: 'status',
+      includeIfNull: false,
+      toJson: petStatusToJson,
+      fromJson: petStatusFromJson)
   final enums.PetStatus? status;
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
@@ -688,11 +745,11 @@ class ApiResponse {
   factory ApiResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiResponseFromJson(json);
 
-  @JsonKey(name: 'code')
+  @JsonKey(name: 'code', includeIfNull: false)
   final int? code;
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', includeIfNull: false, defaultValue: '')
   final String? type;
-  @JsonKey(name: 'message')
+  @JsonKey(name: 'message', includeIfNull: false, defaultValue: '')
   final String? message;
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
@@ -750,9 +807,11 @@ enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
         .key;
   }
 
-  final parsedResult = enums.$PetFindByStatusGetStatusMap.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
+  final parsedResult = defaultValue == null
+      ? null
+      : enums.$PetFindByStatusGetStatusMap.entries
+          .firstWhereOrNull((element) => element.value == defaultValue)
+          ?.key;
 
   return parsedResult ??
       defaultValue ??
@@ -801,9 +860,11 @@ enums.OrderStatus orderStatusFromJson(
         .key;
   }
 
-  final parsedResult = enums.$OrderStatusMap.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
+  final parsedResult = defaultValue == null
+      ? null
+      : enums.$OrderStatusMap.entries
+          .firstWhereOrNull((element) => element.value == defaultValue)
+          ?.key;
 
   return parsedResult ??
       defaultValue ??
@@ -846,9 +907,11 @@ enums.PetStatus petStatusFromJson(
         .key;
   }
 
-  final parsedResult = enums.$PetStatusMap.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
+  final parsedResult = defaultValue == null
+      ? null
+      : enums.$PetStatusMap.entries
+          .firstWhereOrNull((element) => element.value == defaultValue)
+          ?.key;
 
   return parsedResult ??
       defaultValue ??

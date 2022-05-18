@@ -1,5 +1,8 @@
 # swagger_dart_code_generator
 
+flutter pub run build_runner build --delete-conflicting-outputs
+
+
 Please check real [example](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/tree/master/example)
 
 ## Getting Started
@@ -14,6 +17,9 @@ PROJECT_ROOT/swaggers/movies_api_service.swagger
 
 ### Step 2
 Add input folder and output folder to **build.yaml**. Also set sources field.
+
+
+
 
 ```
 targets:
